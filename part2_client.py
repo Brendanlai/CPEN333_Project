@@ -7,7 +7,7 @@ PING_Params = ("127.0.0.1", 12000)
 client = socket(AF_INET, SOCK_DGRAM)
 
 #for loop sending 10 UDP pings
-for i in range(0, 5):
+for i in range(1, 6):
     message = f"PING {i} - hello world"
     try:
         #setting timeout to 1 so we throw an error is more than 1 sec

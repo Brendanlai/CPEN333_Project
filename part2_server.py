@@ -27,5 +27,6 @@ while True:
         continue 
     # Otherwise, the server responds 
     # Replace hello world --> ditto
+    message = (message.decode('utf_8')).split('-')[0] + "- ditto"
     print(message)
-    serverSocket.sendto(message, address)
+    serverSocket.sendto(message.encode('utf_8'), address)
