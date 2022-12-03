@@ -1,5 +1,5 @@
-# Group#:
-# Student Names:
+# Group#: 15
+# Student Names: Jose Pablo Palero and Brendan Lai
 
 """
     This program implements a variety of the snake 
