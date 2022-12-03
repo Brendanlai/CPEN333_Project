@@ -83,7 +83,7 @@ class QueueHandler():
                 if "game_over" in task:
                     gui.gameOver()
                 elif "move" in task:
-                    points = [x for point in task["move"] for x in point]
+                    points = [x for point in task["move"] for x in point] #??
                     gui.canvas.coords(gui.snakeIcon, *points)
                 elif "prey" in task:
                     gui.canvas.coords(gui.preyIcon, *task["prey"])
@@ -126,8 +126,9 @@ class Game():
         """
         SPEED = 0.15     #speed of snake updates (sec)
         while self.gameNotOver:
-            #complete the method implementation below
-            pass #remove this line from your implemenation
+            #loop is running to queue tasks
+            self.move()
+            time.sleep(SPEED)
 
     def whenAnArrowKeyIsPressed(self, e) -> None:
         """ 
@@ -159,8 +160,15 @@ class Game():
             The snake coordinates list (representing its length 
             and position) should be correctly updated.
         """
+        # calculate new coordinates
         NewSnakeCoordinates = self.calculateNewCoordinates()
-        #complete the method implementation below
+        # check game over
+        # self.isGameOver(NewSnakeCoordinates)
+        # check if prey captured --> queue update score, queue new prey
+        # queue to move
+        self.snakeCoordinates.pop(0) #pop last
+        self.snakeCoordinates.append(NewSnakeCoordinates) #add new head
+        self.queue.put({'move': self.snakeCoordinates}) #queing 
 
 
     def calculateNewCoordinates(self) -> tuple:
@@ -172,8 +180,19 @@ class Game():
             head of the snake.
             It is used by the move() method.    
         """
+        # this are the coordinates of he head of the snake
         lastX, lastY = self.snakeCoordinates[-1]
-        #complete the method implementation below
+
+        if self.direction == "Left":
+            return lastX - 10, lastY
+        elif self.direction == "Right":
+            return lastX + 10, lastY
+        elif self.direction == "Up":
+            return lastX, lastY - 10
+        elif self.direction == "Down":
+            return lastX, lastY + 10
+
+
 
 
     def isGameOver(self, snakeCoordinates) -> None:
@@ -185,7 +204,18 @@ class Game():
             field and also adds a "game_over" task to the queue. 
         """
         x, y = snakeCoordinates
-        #complete the method implementation below
+        x_cors, y_cors = []
+        for coordintes in snakeCoordinates:
+            x_cors.append = coordintes.split(',')[0]
+            y_cors.append = coordintes.split(',')[1]
+
+        # check if game over based on window width
+        if (y > WINDOW_HEIGHT or y < 0):
+            pass #queue game over and break
+        elif (x > WINDOW_WIDTH or x < 0):
+            pass #queue game over and break
+        elif (): #check no body collisions
+            pass
 
     def createNewPrey(self) -> None:
         """ 
@@ -199,7 +229,10 @@ class Game():
             away from the walls. 
         """
         THRESHOLD = 15   #sets how close prey can be to borders
-        #complete the method implementation below
+        x_prey = random.randint(0+THRESHOLD, WINDOW_WIDTH - THRESHOLD)
+        y_prey = random.randint(0+THRESHOLD, WINDOW_HEIGHT - THRESHOLD)
+
+        #self.queue['prey'] = [x_prey-5, y_prey-5, x_prey+5, y_prey+5] #this might need to be updated to put
 
 
 if __name__ == "__main__":
