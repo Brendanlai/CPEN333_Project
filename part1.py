@@ -106,7 +106,7 @@ class Game():
         """
         self.queue = queue
         self.score = 0
-        self.prey_location = self.createNewPrey() # tuple field for prey location
+        self.preyLocation = self.createNewPrey() # tuple field for prey location
 
         #starting length and location of the snake
         #note that it is a list of tuples, each being an
@@ -166,13 +166,12 @@ class Game():
         NewSnakeCoordinates = self.calculateNewCoordinates()
         # check game over
         self.isGameOver(NewSnakeCoordinates)
-        # self.isGameOver(NewSnakeCoordinates)
+
         # check if prey captured --> queue update score, queue new prey
         # queue to move
-
         # If prey eaten, update the score, create a new prey, and do not pop the last coordinate (extend the snake)
-        if (NewSnakeCoordinates[0] <= self.prey_location[0] + 10 and NewSnakeCoordinates[0] >= self.prey_location[0] - 5
-            and NewSnakeCoordinates[1] <= self.prey_location[1] + 10 and NewSnakeCoordinates[1] >= self.prey_location[1] - 5):
+        if (NewSnakeCoordinates[0] <= self.preyLocation[0] + 10 and NewSnakeCoordinates[0] >= self.preyLocation[0] - 5
+            and NewSnakeCoordinates[1] <= self.preyLocation[1] + 10 and NewSnakeCoordinates[1] >= self.preyLocation[1] - 5):
             self.score += 1
             self.queue.put({'score': self.score})
             self.createNewPrey()
@@ -195,7 +194,7 @@ class Game():
         # this are the coordinates of he head of the snake
         lastX, lastY = self.snakeCoordinates[-1]
 
-        if self.direction == "Left":
+        if self.direction == "Left": 
             return lastX - 10, lastY
         elif self.direction == "Right":
             return lastX + 10, lastY
@@ -213,19 +212,20 @@ class Game():
             If that is the case, it updates the gameNotOver 
             field and also adds a "game_over" task to the queue. 
         """
+        def setGameOver():
+            self.queue.put({'game_over': True}) # add to queue 
+            self.gameNotOver = False
+            
         x, y = snakeCoordinates
-        cors = (x,y)
-        # error caseses else just return
+        
+        # Set game over if out of window or snake hits itself
         if (y > WINDOW_HEIGHT or y < 0): #out of window
-            pass 
+            setGameOver() 
         elif (x > WINDOW_WIDTH or x < 0): #out of window
-            pass
-        elif (cors in self.snakeCoordinates): #eating itself
-            pass
-        else: 
-            return #nothing went wrong 
-        self.queue.put({'game_over': True}) # add to queue 
-        self.gameNotOver = False
+            setGameOver()
+        elif (snakeCoordinates in self.snakeCoordinates): #eating itself
+            setGameOver()
+
 
     def createNewPrey(self) -> None:
         """ 
@@ -243,7 +243,7 @@ class Game():
         y_prey = random.randint(0+THRESHOLD, WINDOW_HEIGHT - THRESHOLD)
         
         prey_loc = (x_prey - 5, y_prey - 5, x_prey + 5, y_prey + 5)
-        self.prey_location = prey_loc
+        self.preyLocation = prey_loc
         self.queue.put({'prey': prey_loc}) # add to queue
 
 if __name__ == "__main__":
