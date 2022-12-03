@@ -165,6 +165,7 @@ class Game():
         # calculate new coordinates
         NewSnakeCoordinates = self.calculateNewCoordinates()
         # check game over
+        self.isGameOver(NewSnakeCoordinates)
         # self.isGameOver(NewSnakeCoordinates)
         # check if prey captured --> queue update score, queue new prey
         # queue to move
@@ -213,18 +214,18 @@ class Game():
             field and also adds a "game_over" task to the queue. 
         """
         x, y = snakeCoordinates
-        x_cors, y_cors = []
-        for coordintes in snakeCoordinates:
-            x_cors.append = coordintes.split(',')[0]
-            y_cors.append = coordintes.split(',')[1]
-
-        # check if game over based on window width
-        if (y > WINDOW_HEIGHT or y < 0):
-            pass #queue game over and break
-        elif (x > WINDOW_WIDTH or x < 0):
-            pass #queue game over and break
-        elif (): #check no body collisions
+        cors = (x,y)
+        # error caseses else just return
+        if (y > WINDOW_HEIGHT or y < 0): #out of window
+            pass 
+        elif (x > WINDOW_WIDTH or x < 0): #out of window
             pass
+        elif (cors in self.snakeCoordinates): #eating itself
+            pass
+        else: 
+            return #nothing went wrong 
+        self.queue.put({'game_over': True}) # add to queue 
+        self.gameNotOver = False
 
     def createNewPrey(self) -> None:
         """ 
