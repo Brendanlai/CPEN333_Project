@@ -1,3 +1,6 @@
+# Group#: 15
+# Student Names: Jose Pablo Palero and Brendan Lai
+
 # UDPPingerServer.py 
 # We will need the following module to generate randomized lost packets 
 import random
