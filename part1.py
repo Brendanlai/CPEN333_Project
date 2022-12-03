@@ -193,8 +193,6 @@ class Game():
             return lastX, lastY + 10
 
 
-
-
     def isGameOver(self, snakeCoordinates) -> None:
         """
             This method checks if the game is over by 
@@ -231,6 +229,10 @@ class Game():
         THRESHOLD = 15   #sets how close prey can be to borders
         x_prey = random.randint(0+THRESHOLD, WINDOW_WIDTH - THRESHOLD)
         y_prey = random.randint(0+THRESHOLD, WINDOW_HEIGHT - THRESHOLD)
+        
+        prey_loc = (x_prey - 5, y_prey - 5, x_prey + 5, y_prey + 5)
+
+        self.queue.put({'prey': prey_loc}) # add to queue 
 
         #self.queue['prey'] = [x_prey-5, y_prey-5, x_prey+5, y_prey+5] #this might need to be updated to put
 
