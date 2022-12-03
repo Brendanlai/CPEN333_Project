@@ -83,7 +83,7 @@ class QueueHandler():
                 if "game_over" in task:
                     gui.gameOver()
                 elif "move" in task:
-                    points = [x for point in task["move"] for x in point] #??
+                    points = [x for point in task["move"] for x in point]
                     gui.canvas.coords(gui.snakeIcon, *points)
                 elif "prey" in task:
                     gui.canvas.coords(gui.preyIcon, *task["prey"])
@@ -106,6 +106,8 @@ class Game():
         """
         self.queue = queue
         self.score = 0
+        self.prey_location = self.createNewPrey() # tuple field for prey location
+
         #starting length and location of the snake
         #note that it is a list of tuples, each being an
         # (x, y) tuple. Initially its size is 5 tuples.       
@@ -166,7 +168,16 @@ class Game():
         # self.isGameOver(NewSnakeCoordinates)
         # check if prey captured --> queue update score, queue new prey
         # queue to move
-        self.snakeCoordinates.pop(0) #pop last
+
+        # If prey eaten, update the score, create a new prey, and do not pop the last coordinate (extend the snake)
+        if (NewSnakeCoordinates[0] <= self.prey_location[0] + 10 and NewSnakeCoordinates[0] >= self.prey_location[0] - 5
+            and NewSnakeCoordinates[1] <= self.prey_location[1] + 10 and NewSnakeCoordinates[1] >= self.prey_location[1] - 5):
+            self.score += 1
+            self.queue.put({'score': self.score})
+            self.createNewPrey()
+        else:
+            self.snakeCoordinates.pop(0) # pop last if we didn't eat remove tail
+
         self.snakeCoordinates.append(NewSnakeCoordinates) #add new head
         self.queue.put({'move': self.snakeCoordinates}) #queing 
 
@@ -231,11 +242,8 @@ class Game():
         y_prey = random.randint(0+THRESHOLD, WINDOW_HEIGHT - THRESHOLD)
         
         prey_loc = (x_prey - 5, y_prey - 5, x_prey + 5, y_prey + 5)
-
-        self.queue.put({'prey': prey_loc}) # add to queue 
-
-        #self.queue['prey'] = [x_prey-5, y_prey-5, x_prey+5, y_prey+5] #this might need to be updated to put
-
+        self.prey_location = prey_loc
+        self.queue.put({'prey': prey_loc}) # add to queue
 
 if __name__ == "__main__":
     #some constants for our GUI
