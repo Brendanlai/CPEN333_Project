@@ -1,3 +1,6 @@
+# Group#: 15
+# Student Names: Jose Pablo Palero and Brendan Lai
+
 from socket import *
 import time # for RTT
 
