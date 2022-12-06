@@ -171,8 +171,6 @@ class Game():
         # condition for prey eaten is new coordiantes come in with range of our prey location 
         if (NewSnakeCoordinates[0] <= self.preyLocation[0] + 10 and NewSnakeCoordinates[0] >= self.preyLocation[0] - 5
             and NewSnakeCoordinates[1] <= self.preyLocation[1] + 10 and NewSnakeCoordinates[1] >= self.preyLocation[1] - 5):
-            print(self.preyLocation)
-            print(self.preyLocation[1])
             self.score += 1 #update score
             self.queue.put({'score': self.score}) #queue score update
             self.createNewPrey() #create new prey
