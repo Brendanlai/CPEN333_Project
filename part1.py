@@ -164,22 +164,23 @@ class Game():
         """
         # calculate new coordinates
         NewSnakeCoordinates = self.calculateNewCoordinates()
-        # check game over
+        # check game over with new coordinates
         self.isGameOver(NewSnakeCoordinates)
 
-        # check if prey captured --> queue update score, queue new prey
-        # queue to move
-        # If prey eaten, update the score, create a new prey, and do not pop the last coordinate (extend the snake)
+        # if prey eaten do not pop the last coordinate (extend the snake) else pop
+        # condition for prey eaten is new coordiantes come in with range of our prey location 
         if (NewSnakeCoordinates[0] <= self.preyLocation[0] + 10 and NewSnakeCoordinates[0] >= self.preyLocation[0] - 5
             and NewSnakeCoordinates[1] <= self.preyLocation[1] + 10 and NewSnakeCoordinates[1] >= self.preyLocation[1] - 5):
-            self.score += 1
-            self.queue.put({'score': self.score})
-            self.createNewPrey()
+            print(self.preyLocation)
+            print(self.preyLocation[1])
+            self.score += 1 #update score
+            self.queue.put({'score': self.score}) #queue score update
+            self.createNewPrey() #create new prey
         else:
             self.snakeCoordinates.pop(0) # pop last if we didn't eat remove tail
 
         self.snakeCoordinates.append(NewSnakeCoordinates) #add new head
-        self.queue.put({'move': self.snakeCoordinates}) #queing 
+        self.queue.put({'move': self.snakeCoordinates}) #queing movement
 
 
     def calculateNewCoordinates(self) -> tuple:
@@ -191,17 +192,18 @@ class Game():
             head of the snake.
             It is used by the move() method.    
         """
-        # this are the coordinates of he head of the snake
+        # coordinates of the head of the snake
         lastX, lastY = self.snakeCoordinates[-1]
-
+        
+        # movemnt of cors by 10
         if self.direction == "Left": 
-            return lastX - 10, lastY
+            return lastX - 10, lastY #left decraese in x cors
         elif self.direction == "Right":
-            return lastX + 10, lastY
+            return lastX + 10, lastY #right increase in x cors
         elif self.direction == "Up":
-            return lastX, lastY - 10
+            return lastX, lastY - 10 #down decrease in y cors
         elif self.direction == "Down":
-            return lastX, lastY + 10
+            return lastX, lastY + 10 #up increase in y cors
 
 
     def isGameOver(self, snakeCoordinates) -> None:
@@ -212,6 +214,7 @@ class Game():
             If that is the case, it updates the gameNotOver 
             field and also adds a "game_over" task to the queue. 
         """
+        #method to queue game over
         def setGameOver():
             self.queue.put({'game_over': True}) # add to queue 
             self.gameNotOver = False
@@ -239,12 +242,14 @@ class Game():
             away from the walls. 
         """
         THRESHOLD = 15   #sets how close prey can be to borders
+        #randomly generate a x and y location based on threshold above
         x_prey = random.randint(0+THRESHOLD, WINDOW_WIDTH - THRESHOLD)
         y_prey = random.randint(0+THRESHOLD, WINDOW_HEIGHT - THRESHOLD)
         
+        #set pray width to 5
         prey_loc = (x_prey - 5, y_prey - 5, x_prey + 5, y_prey + 5)
         self.preyLocation = prey_loc
-        self.queue.put({'prey': prey_loc}) # add to queue
+        self.queue.put({'prey': prey_loc}) # add to queue new pray
 
 if __name__ == "__main__":
     #some constants for our GUI
